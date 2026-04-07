@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZVera - Simplified VeraCrypt Management</title>
+    <meta name="description" content="Unlock your VeraCrypt volumes in one click. Modern, fast, and secure desktop app for Windows, macOS, and Linux.">
+    <meta name="keywords" content="VeraCrypt, encryption, disk encryption, security, privacy, EZVera">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="EZVera - Simplified VeraCrypt Management">
+    <meta property="og:description" content="Unlock your VeraCrypt volumes in one click.">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a24;
+            --accent: #00ffc8;
+            --accent-dark: #00b894;
+            --text: #e0e0e0;
+            --text-dim: #5a6670;
+            --border: #2a2a3a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 200, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 200, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: 10%;
+            left: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.15) 0%, transparent 70%);
+        }
+
+        .bg-glow-2 {
+            bottom: 20%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            color: var(--bg-dark) !important;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600 !important;
+        }
+
+        .nav-cta:hover {
+            opacity: 0.9;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 0 80px;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 200, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .hero-badge span {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: var(--bg-dark);
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 255, 200, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-screenshot {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-glow {
+            position: absolute;
+            inset: -20%;
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.2) 0%, transparent 60%);
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 255, 200, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.2) 0%, rgba(0, 184, 148, 0.1) 100%);
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 15px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        /* Download Section */
+        .download {
+            padding: 120px 0;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .download-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .download-card:hover {
+            border-color: rgba(0, 255, 200, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .download-card.featured {
+            border-color: rgba(0, 255, 200, 0.3);
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.05) 0%, transparent 100%);
+        }
+
+        .download-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .download-card.featured .download-icon {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+
+        .download-platform {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .download-info {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: rgba(0, 255, 200, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            border-radius: 12px;
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .download-card.featured .download-btn {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+
+        .download-card.featured .download-btn:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        /* How it Works */
+        .how-it-works {
+            padding: 120px 0;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -16px;
+            width: 32px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-copy {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero-description {
+                margin: 0 auto 40px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-image {
+                order: -1;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .features-grid,
+            .download-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .step::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-image {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🔓</div>
+                <span class="logo-text">EZVera</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#download">Download</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="https://github.com/kezy-code/EZVera" target="_blank">GitHub</a>
+                <a href="#download" class="nav-cta">Download Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-badge">
+                        <span></span>
+                        Open Source & Free
+                    </div>
+                    <h1>
+                        Unlock VeraCrypt<br>
+                        <span class="gradient">in One Click</span>
+                    </h1>
+                    <p class="hero-description">
+                        Stop navigating through complex menus. EZVera lets you save your encrypted drives and unlock them instantly with a beautiful, modern interface.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#download" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Now
+                        </a>
+                        <a href="https://github.com/kezy-code/EZVera" class="btn btn-secondary" target="_blank">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-glow"></div>
+                    <img src="assets/screenshot.svg" alt="EZVera Screenshot" class="hero-screenshot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">Why EZVera?</h2>
+                <p class="section-description">
+                    A modern approach to VeraCrypt volume management
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">One-Click Unlock</h3>
+                    <p class="feature-description">
+                        Save your drives once, unlock them with a single click. No more navigating through menus.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Auto-Detection</h3>
+                    <p class="feature-description">
+                        Automatically detects all your disks and partitions, just like VeraCrypt does.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Secure by Design</h3>
+                    <p class="feature-description">
+                        Passwords are never stored. Only device paths and mount letters are saved.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Modern UI</h3>
+                    <p class="feature-description">
+                        Beautiful, dark-mode interface with smooth animations. A pleasure to use.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🪶</div>
+                    <h3 class="feature-title">Lightweight</h3>
+                    <p class="feature-description">
+                        Only ~5MB. Built with Tauri and Rust for maximum performance and minimal footprint.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3 class="feature-title">Cross-Platform</h3>
+                    <p class="feature-description">
+                        Works on Windows, macOS, and Linux. Same great experience everywhere.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Download</span>
+                <h2 class="section-title">Get EZVera</h2>
+                <p class="section-description">
+                    Free and open source. Choose your platform.
+                </p>
+            </div>
+            <div class="download-grid">
+                <div class="download-card featured">
+                    <div class="download-icon">🪟</div>
+                    <h3 class="download-platform">Windows</h3>
+                    <p class="download-info">Windows 10/11 • x64 • ~5MB</p>
+                    <a href="https://github.com/kezy-code/EZVera/blob/main/EZVera_1.0.0_x64-setup.exe" class="download-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download .exe
+                    </a>
+                </div>
+                <div class="download-card">
+                    <div class="download-icon">🍎</div>
+                    <h3 class="download-platform">macOS</h3>
+                    <p class="download-info">macOS 11+ • Universal • ~8MB</p>
+                    <a href="https://github.com/YOUR_USERNAME/ezvera/releases/latest/download/EZVera.dmg" class="download-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download .dmg
+                    </a>
+                </div>
+                <div class="download-card">
+                    <div class="download-icon">🐧</div>
+                    <h3 class="download-platform">Linux</h3>
+                    <p class="download-info">Ubuntu/Debian • x64 • ~6MB</p>
+                    <a href="https://github.com/YOUR_USERNAME/ezvera/releases/latest/download/ezvera_amd64.AppImage" class="download-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download .AppImage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Simple</span>
+                <h2 class="section-title">How it Works</h2>
+                <p class="section-description">
+                    From installation to unlocking in seconds
+                </p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Download</h3>
+                    <p class="step-description">Get EZVera for your platform</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Add Drive</h3>
+                    <p class="step-description">Select your VeraCrypt partition</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Enter Password</h3>
+                    <p class="step-description">Type your VeraCrypt password</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Unlocked!</h3>
+                    <p class="step-description">Your drive is now accessible</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">🔓</div>
+                    <span class="logo-text">EZVera</span>
+                </a>
+                <div class="footer-links">
+                    <a href="https://github.com/kezy-code/EZVera" target="_blank">GitHub</a>
+                    <a href="https://github.com/kezy-code/EZVera/issues" target="_blank">Report Issue</a>
+                    <a href="https://github.com/kezy-code/EZVera/blob/main/LICENSE" target="_blank">MIT License</a>
+                </div>
+                <p class="footer-copy">
+                    Made with ❤️ • Not affiliated with VeraCrypt
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 15, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>
