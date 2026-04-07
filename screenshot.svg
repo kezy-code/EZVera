@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#12121a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffc8"/>
+      <stop offset="100%" style="stop-color:#00b894"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Window Background -->
+  <rect width="800" height="600" rx="16" fill="url(#bgGrad)"/>
+  
+  <!-- Title Bar -->
+  <rect width="800" height="40" rx="16" fill="#1a1a24"/>
+  <rect y="16" width="800" height="24" fill="#1a1a24"/>
+  <circle cx="24" cy="20" r="6" fill="#ff5f57"/>
+  <circle cx="44" cy="20" r="6" fill="#febc2e"/>
+  <circle cx="64" cy="20" r="6" fill="#28c840"/>
+  <text x="400" y="25" text-anchor="middle" fill="#666" font-family="Inter, sans-serif" font-size="13">EZVera</text>
+  
+  <!-- Glow Effects -->
+  <ellipse cx="200" cy="200" rx="150" ry="150" fill="#00ffc8" opacity="0.1" filter="url(#glow)"/>
+  <ellipse cx="600" cy="400" rx="100" ry="100" fill="#8b5cf6" opacity="0.08" filter="url(#glow)"/>
+  
+  <!-- Header -->
+  <rect x="340" y="70" width="48" height="48" rx="12" fill="url(#accentGrad)"/>
+  <text x="364" y="100" text-anchor="middle" fill="#0a0a0f" font-size="24">🔒</text>
+  <text x="400" y="98" text-anchor="start" fill="url(#accentGrad)" font-family="Inter, sans-serif" font-size="36" font-weight="700">EZVera</text>
+  <text x="400" y="138" text-anchor="middle" fill="#5a6670" font-family="Inter, sans-serif" font-size="11" letter-spacing="3">UNLOCK IN ONE CLICK</text>
+  
+  <!-- Card Container -->
+  <rect x="100" y="170" width="600" height="280" rx="24" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+  
+  <!-- Section Title -->
+  <text x="130" y="205" fill="#00ffc8" font-family="Inter, sans-serif" font-size="10" letter-spacing="2">◆ SAVED DRIVES</text>
+  
+  <!-- Add Drive Button -->
+  <rect x="560" y="185" width="110" height="36" rx="10" fill="#00ffc8" fill-opacity="0.1" stroke="#00ffc8" stroke-opacity="0.3"/>
+  <text x="615" y="208" text-anchor="middle" fill="#00ffc8" font-family="Inter, sans-serif" font-size="13" font-weight="500">+ Add Drive</text>
+  
+  <!-- Drive Card 1 - Selected -->
+  <rect x="120" y="230" width="560" height="70" rx="16" fill="#00ffc8" fill-opacity="0.08" stroke="#00ffc8" stroke-opacity="0.4" stroke-width="2"/>
+  <rect x="140" y="250" width="42" height="42" rx="10" fill="url(#accentGrad)"/>
+  <text x="161" y="278" text-anchor="middle" font-size="18">💿</text>
+  <text x="200" y="268" fill="#00ffc8" font-family="Inter, sans-serif" font-size="15" font-weight="600">Secure Storage</text>
+  <text x="200" y="286" fill="#5a6670" font-family="JetBrains Mono, monospace" font-size="11">\Device\Harddisk1\Partition2</text>
+  <rect x="600" y="258" width="40" height="28" rx="8" fill="#00ffc8" fill-opacity="0.2"/>
+  <text x="620" y="277" text-anchor="middle" fill="#00ffc8" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">V:</text>
+  
+  <!-- Drive Card 2 -->
+  <rect x="120" y="310" width="560" height="70" rx="16" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+  <rect x="140" y="330" width="42" height="42" rx="10" fill="#ffffff" fill-opacity="0.05"/>
+  <text x="161" y="358" text-anchor="middle" font-size="18">🔐</text>
+  <text x="200" y="348" fill="#ffffff" font-family="Inter, sans-serif" font-size="15" font-weight="600">Work Documents</text>
+  <text x="200" y="366" fill="#5a6670" font-family="JetBrains Mono, monospace" font-size="11">\Device\Harddisk2\Partition1</text>
+  <rect x="600" y="338" width="40" height="28" rx="8" fill="#ffffff" fill-opacity="0.05"/>
+  <text x="620" y="357" text-anchor="middle" fill="#5a6670" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">W:</text>
+  
+  <!-- Drive Card 3 -->
+  <rect x="120" y="390" width="560" height="70" rx="16" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+  <rect x="140" y="410" width="42" height="42" rx="10" fill="#ffffff" fill-opacity="0.05"/>
+  <text x="161" y="438" text-anchor="middle" font-size="18">💾</text>
+  <text x="200" y="428" fill="#ffffff" font-family="Inter, sans-serif" font-size="15" font-weight="600">Backup Drive</text>
+  <text x="200" y="446" fill="#5a6670" font-family="JetBrains Mono, monospace" font-size="11">\Device\Harddisk1\Partition3</text>
+  <rect x="600" y="418" width="40" height="28" rx="8" fill="#ffffff" fill-opacity="0.05"/>
+  <text x="620" y="437" text-anchor="middle" fill="#5a6670" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">X:</text>
+  
+  <!-- Unlock Button -->
+  <rect x="100" y="490" width="600" height="60" rx="16" fill="url(#accentGrad)"/>
+  <text x="370" y="527" text-anchor="middle" fill="#0a0a0f" font-family="Inter, sans-serif" font-size="18" font-weight="600">🔓</text>
+  <text x="420" y="527" text-anchor="middle" fill="#0a0a0f" font-family="Inter, sans-serif" font-size="18" font-weight="600">Unlock Drive</text>
+  
+  <!-- Footer -->
+  <text x="400" y="575" text-anchor="middle" fill="#3a4650" font-family="Inter, sans-serif" font-size="12">EZVera v1.0 — Simplified VeraCrypt Management</text>
+</svg>
